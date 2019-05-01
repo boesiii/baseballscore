@@ -1,0 +1,129 @@
+<!DOCTYPE html> 
+<!-- https://blogs.it.ox.ac.uk/acit-rs-team/2014/10/08/how-to-get-data-out-of-a-google-spreadsheet-using-jsonp/ -->
+<!-- https://stackoverflow.com/questions/37409200/get-data-from-google-sheet-using-json -->
+<html> 
+	<head> 
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    input { max-width: 60px; } 
+   </style>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </head> 
+  <body> 
+    
+      
+    
+    <div class="results"></div> 
+    <body>
+    <table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" >score</th>
+      
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Scott</th>
+      <td><input type="number"  class="form-control" name="scott-score" id="scott-score" value="0"></td>
+      
+      
+    </tr>
+    <tr>
+      <th scope="row">Other Team</th>
+      <td><input type="number" class="form-control" name="other-score" id="other-score" value="0"></td>
+      
+      
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      
+      
+    </tr>
+    <tr>
+      <th scope="row">Inning</th>
+      <td><input type="number" class="form-control" name="inning" id="inning" value="0"></td>
+      
+      
+    </tr>
+    <tr>
+      <th scope="row">Outs</th>
+      <td><input type="number" class="form-control" name="outs" id="outs" value="0"></td>
+      
+      
+    </tr>
+    
+    <tr>
+       <td><button type "button" value="Refresh Page" class="btn btn-primary" onClick="window.location.reload();">Refresh</td>
+       <td></td>
+      
+      
+    </tr>
+  </tbody>
+</table>
+
+<script>
+
+ // ID of the Google Spreadsheet
+ var spreadsheetID = "12K8ByWdBjo8BeinxCQHhvN-9ikqMrkSJRU79tfUpls0";
+ 
+
+ // Make sure it is public or set to Anyone with link can view 
+var url = "https://spreadsheets.google.com/feeds/list/" + spreadsheetID + "/od6/public/values?alt=json";
+    $(document).ready(function () {
+        $.getJSON(url, function(data) {
+             <!-- console.log(data);  -->
+            var entry = data.feed.entry;
+            <!-- console.log(entry);  -->
+            <!-- document.getElementById("demo").innerHTML = entry; -->
+
+            $(entry).each(function(){
+            
+                // Column names are name, age, etc.
+                console.log(this.gsx$desc.$t);
+                if (this.gsx$desc.$t == 'inning') {
+                    inning = this.gsx$score.$t;
+                    console.log(inning); 
+                    document.getElementById("inning").value = inning;
+                }
+                if (this.gsx$desc.$t == 'other team') {
+                    otherScore = this.gsx$score.$t;
+                    console.log(otherScore);
+                    document.getElementById("other-score").value = otherScore;
+                }
+                if (this.gsx$desc.$t == 'scott') {
+                    scottScore = this.gsx$score.$t;
+                    console.log(scottScore);
+                    document.getElementById("scott-score").value = scottScore;
+                    
+                }
+                if (this.gsx$desc.$t == 'outs') {
+                    outs = this.gsx$score.$t;
+                    console.log(outs);
+                    document.getElementById("outs").value = outs;
+                    
+                }
+                  
+                   <!-- $('.results').prepend('<h2>'+this.gsx$desc.$t+'</h2><p>'+this.gsx$score.$t+'</p>');  -->
+              }); 
+         });
+  });
+
+</script>
+  </body>
+</html>
